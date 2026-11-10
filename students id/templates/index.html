@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Monitoring</title>
+</head>
+<body>
+
+<h2>Add Student</h2>
+<form method="POST">
+    ID: <input type="text" name="student_id" required><br>
+    Name: <input type="text" name="name"><br>
+    Course: <input type="text" name="course"><br>
+    Score: <input type="number" name="score"><br>
+    <button type="submit">Add</button>
+	Date: <input type="date" name="date_added"><br>
+</form>
+
+<hr>
+
+<h2>Search</h2>
+<form method="GET">
+    <input type="text" name="search">
+    <button type="submit">Search</button>
+</form>
+
+<hr>
+
+<h2>Students</h2>
+
+<table border="1">
+<tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Course</th>
+    <th>Score</th>
+    <th>Grade</th>
+	<th>Date Added</th>
+    <th>Actions</th>
+	
+</tr>
+
+{% for s in students %}
+<tr>
+    <td>{{ s[1] }}</td>
+    <td>{{ s[2] }}</td>
+    <td>{{ s[3] }}</td>
+    <td>{{ s[4] }}</td>
+    <td>
+        {% if s[4]|float >= 90 %} A
+        {% elif s[4]|float >= 80 %} B
+        {% elif s[4]|float >= 70 %} C
+        {% elif s[4]|float >= 60 %} D
+        {% else %} F
+        {% endif %}
+		
+    </td>
+	<td>{{ s[5] }}</td>
+    <td>
+        <a href="/edit/{{ s[0] }}">Edit</a>
+        <a href="/delete/{{ s[0] }}">Delete</a>
+    </td>
+</tr>
+{% endfor %}
+
+</table>
+
+</body>
+</html>

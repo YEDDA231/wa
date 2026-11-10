@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+  <div class="col-lg-8 mx-auto">
+    <div class="card mb-3">
+      <div class="card-body">
+        <h2 class="h4 mb-3">Consultations Inquiry</h2>
+        <p class="text-muted small mb-3">
+          Run different inquiries to list consultations or veterinarians with full details.
+        </p>
+        <form method="post">
+          <div class="mb-3">
+            <label class="form-label required">Inquiry Type</label>
+            <select name="mode" class="form-select" required>
+              <option value="">Select inquiry</option>
+              <option value="special" {% if mode=='special' %}selected{% endif %}>Vets with specialization (search key)</option>
+              <option value="pet" {% if mode=='pet' %}selected{% endif %}>Consultations for specified pet ID</option>
+              <option value="owner" {% if mode=='owner' %}selected{% endif %}>Consultations for specified owner ID</option>
+              <option value="vet" {% if mode=='vet' %}selected{% endif %}>Consultations for specified vet ID</option>
+              <option value="date" {% if mode=='date' %}selected{% endif %}>Consultations from date range</option>
+            </select>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">
+                {% if mode == 'special' %}Specialization keyword
+                {% elif mode in ['pet','owner','vet'] %}ID value
+                {% else %}From date (YYYY-MM-DD){% endif %}
+              </label>
+              <input type="{{ 'date' if mode=='date' else 'text' }}" name="value1" class="form-control" value="{{ value1 or '' }}">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">
+                {% if mode == 'date' %}To date (YYYY-MM-DD){% else %}&nbsp;{% endif %}
+              </label>
+              <input type="{{ 'date' if mode=='date' else 'text' }}" name="value2" class="form-control" value="{{ value2 or '' }}" {% if mode!='date' %}disabled{% endif %}>
+            </div>
+          </div>
+
+          <div class="mt-3 text-end">
+            <button class="btn btn-success" type="submit">Run Inquiry</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    {% if result is not none %}
+    <div class="card">
+      <div class="card-body">
+        <h3 class="h5 mb-3">Inquiry Result</h3>
+        <table class="table table-sm table-striped align-middle">
+          <thead>
+            <tr>
+              {% if mode == 'special' %}
+              <th>Vet ID</th>
+              <th>Vet Name</th>
+              <th>Specialization</th>
+              {% elif mode == 'pet' %}
+              <th>Consult ID</th>
+              <th>Date/Time</th>
+              <th>Pet ID</th>
+              <th>Pet Name</th>
+              <th>Vet</th>
+              <th>Diagnoses</th>
+              <th>Prescription</th>
+              {% elif mode == 'owner' %}
+              <th>Consult ID</th>
+              <th>Date/Time</th>
+              <th>Owner ID</th>
+              <th>Owner Name</th>
+              <th>Pet ID</th>
+              <th>Pet Name</th>
+              <th>Vet</th>
+              <th>Diagnoses</th>
+              <th>Prescription</th>
+              {% elif mode == 'vet' %}
+              <th>Consult ID</th>
+              <th>Date/Time</th>
+              <th>Vet ID</th>
+              <th>Vet Name</th>
+              <th>Pet ID</th>
+              <th>Pet Name</th>
+              <th>Diagnoses</th>
+              <th>Prescription</th>
+              {% elif mode == 'date' %}
+              <th>Consult ID</th>
+              <th>Date/Time</th>
+              <th>Owner</th>
+              <th>Pet</th>
+              <th>Vet</th>
+              <th>Diagnoses</th>
+              <th>Prescription</th>
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in result %}
+            <tr>
+              {% if mode == 'special' %}
+              <td>{{ row.vetID }}</td>
+              <td>Dr. {{ row.vetFName }} {{ row.vetLName }}</td>
+              <td>{{ row.vetSpecial }}</td>
+              {% elif mode == 'pet' %}
+              <td>{{ row.consultID }}</td>
+              <td>{{ row.consultDate }}</td>
+              <td>{{ row.petID }}</td>
+              <td>{{ row.petName }}</td>
+              <td>Dr. {{ row.vetFName }} {{ row.vetLName }}</td>
+              <td>{{ row.diagnoses }}</td>
+              <td>{{ row.prescription }}</td>
+              {% elif mode == 'owner' %}
+              <td>{{ row.consultID }}</td>
+              <td>{{ row.consultDate }}</td>
+              <td>{{ row.petOwnerID }}</td>
+              <td>{{ row.petOwnerFName }} {{ row.petOwnerLName }}</td>
+              <td>{{ row.petID }}</td>
+              <td>{{ row.petName }}</td>
+              <td>Dr. {{ row.vetFName }} {{ row.vetLName }}</td>
+              <td>{{ row.diagnoses }}</td>
+              <td>{{ row.prescription }}</td>
+              {% elif mode == 'vet' %}
+              <td>{{ row.consultID }}</td>
+              <td>{{ row.consultDate }}</td>
+              <td>{{ row.vetID }}</td>
+              <td>Dr. {{ row.vetFName }} {{ row.vetLName }}</td>
+              <td>{{ row.petID }}</td>
+              <td>{{ row.petName }}</td>
+              <td>{{ row.diagnoses }}</td>
+              <td>{{ row.prescription }}</td>
+              {% elif mode == 'date' %}
+              <td>{{ row.consultID }}</td>
+              <td>{{ row.consultDate }}</td>
+              <td>{{ row.petOwnerFName }} {{ row.petOwnerLName }}</td>
+              <td>{{ row.petName }}</td>
+              <td>Dr. {{ row.vetFName }} {{ row.vetLName }}</td>
+              <td>{{ row.diagnoses }}</td>
+              <td>{{ row.prescription }}</td>
+              {% endif %}
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="8" class="text-center text-muted">No records found.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+

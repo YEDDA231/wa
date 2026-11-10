@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}{% if employee %}Edit Employee{% else %}Add Employee{% endif %}{% endblock %}
+{% block content %}
+<h2>{% if employee %}Edit Employee{% else %}Add an Employee{% endif %}</h2>
+<p class="page-links">
+    <a href="{{ url_for('employees') }}">Employee Management</a>
+    <span>|</span>
+    <a href="{{ url_for('menu') }}">Back to Menu</a>
+</p>
+<form method="post" class="sheet-form">
+    <label for="empID">Employee ID</label>
+    {% if employee %}
+    <input id="empID" name="empID" type="number" value="{{ employee.empID }}" readonly>
+    {% else %}
+    <input id="empID" name="empID" type="number" min="1" required autofocus value="{{ request.form.get('empID', suggested) }}">
+    {% endif %}
+
+    {% set chosen = request.form.get('deptCode', employee.deptCode if employee else '') %}
+    <label for="deptCode">Department</label>
+    <select id="deptCode" name="deptCode" required {% if employee %}autofocus{% endif %}>
+        <option value="" disabled {% if not chosen %}selected{% endif %}>Select a department</option>
+        {% for dept in departments %}
+        <option value="{{ dept.depCode }}" {% if chosen|string == dept.depCode|string %}selected{% endif %}>
+            {{ dept.depCode }} - {{ dept.depName }}
+        </option>
+        {% endfor %}
+    </select>
+
+    <label for="empLName">Last Name</label>
+    <input id="empLName" name="empLName" maxlength="60" required value="{{ request.form.get('empLName', employee.empLName if employee else '') }}">
+
+    <label for="empName">First Name</label>
+    <input id="empName" name="empName" maxlength="60" required value="{{ request.form.get('empName', employee.empName if employee else '') }}">
+
+    <label for="empRateHr">Rate per Hour</label>
+    {% if employee %}
+        {% set rate_default = "%.2f"|format(employee.empRateHr) %}
+    {% else %}
+        {% set rate_default = "" %}
+    {% endif %}
+    <input id="empRateHr" name="empRateHr" type="number" min="0" step="0.01" required value="{{ request.form.get('empRateHr', rate_default) }}">
+
+    <div class="form-actions">
+        <button type="submit">{% if employee %}Save Changes{% else %}Save Employee{% endif %}</button>
+        <a href="{{ url_for('employees') }}">Cancel</a>
+    </div>
+</form>
+{% endblock %}

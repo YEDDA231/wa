@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Attendance Recording{% endblock %}
+{% block content %}
+<h2>Attendance Recording</h2>
+<p class="page-links">
+    <a href="{{ url_for('record_attendance') }}">Record Attendance Here</a>
+    <span>|</span>
+    <a href="{{ url_for('menu') }}">Back to Menu</a>
+</p>
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th scope="col">Record #</th>
+                <th scope="col">Emp. ID</th>
+                <th scope="col">Date/Time In</th>
+                <th scope="col">Date/Time Out</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in records %}
+            <tr class="{% if record.attStat == 'Cancelled' %}cancelled{% endif %}">
+                <td>{{ record.attRN }}</td>
+                <td>{{ record.empID }}</td>
+                <td class="when">{{ record.attTimeIn|when }}</td>
+                <td class="when">{{ record.attTimeOut|when }}</td>
+                <td class="actions">
+                    {% if record.attStat == 'Cancelled' %}
+                    <span class="muted">Cancelled</span>
+                    {% else %}
+                    <form method="post" action="{{ url_for('cancel_attendance', att_rn=record.attRN) }}" onsubmit="return confirm('Cancel this attendance record?');">
+                        <button type="submit" class="link danger">Cancel</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" class="empty">No attendance records yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

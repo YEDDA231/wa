@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Menu{% endblock %}
+{% block content %}
+<section class="narrow">
+    <h2>Choose your Transaction:</h2>
+    <nav class="menu-list" aria-label="Transactions">
+        <a href="{{ url_for('departments') }}">Department Management</a>
+        <a href="{{ url_for('employees') }}">Employee Management</a>
+        <a href="{{ url_for('attendance') }}">Attendance Recording</a>
+        <a href="{{ url_for('monitoring') }}">Attendance Monitoring</a>
+    </nav>
+</section>
+{% endblock %}

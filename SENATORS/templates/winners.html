@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Winners · Philippine National Election{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div>
+        <h2>Election winners</h2>
+        <p class="muted">Each position fills its number of seats. Positions with more than one winner are listed from the highest vote total downward. Equal totals are ordered by last name.</p>
+    </div>
+</div>
+<section class="card">
+    <table>
+        <tr>
+            <th>Elective Position</th>
+            <th>Winner</th>
+            <th class="num">Total Votes</th>
+        </tr>
+        {% for row in winners %}
+        <tr>
+            <td>{{ row.posName }}</td>
+            <td>{{ row.name }}</td>
+            <td class="num">{{ row.totalVotes }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="3">No winners yet.</td></tr>
+        {% endfor %}
+    </table>
+</section>
+{% endblock %}

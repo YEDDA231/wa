@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Attendance Monitoring{% endblock %}
+{% block content %}
+<section class="narrow">
+    <h2>Attendance Monitoring</h2>
+    <p class="page-links">
+        <a href="{{ url_for('menu') }}">Back to Menu</a>
+    </p>
+    <p class="prompt">Choose your Transaction:</p>
+    <nav class="menu-list" aria-label="Attendance reports">
+        <a href="{{ url_for('monitor_employee') }}">By Employee</a>
+        <a href="{{ url_for('monitor_range') }}">By Date Range</a>
+    </nav>
+</section>
+{% endblock %}

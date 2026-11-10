@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Registrations · UC Main Intramurals{% endblock %}
+{% block heading %}Registrations{% endblock %}
+{% block lede %}Accounts in the Registration table. Passwords stay in the database and are not listed here.{% endblock %}
+{% block content %}
+<section class="panel">
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID number</th>
+                    <th>Role</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.userName }}</td>
+                    <td>{{ role_labels.get(user.role, user.role) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

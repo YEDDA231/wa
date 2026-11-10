@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}{% if candidate %}Update candidate{% else %}Add candidate{% endif %}{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div>
+        <h2>{% if candidate %}Update candidate{% else %}Add candidate{% endif %}</h2>
+        <p class="muted">A candidate belongs to one elective position.</p>
+    </div>
+</div>
+<form class="card form-card" method="post">
+    <label>First name
+        <input name="candFName" value="{{ candidate.candFName if candidate else '' }}" required>
+    </label>
+    <label>Middle name
+        <input name="candMName" value="{{ candidate.candMName if candidate and candidate.candMName else '' }}">
+    </label>
+    <label>Last name
+        <input name="candLName" value="{{ candidate.candLName if candidate else '' }}" required>
+    </label>
+    <label>Position
+        <select name="posID" required>
+            <option value="">Select a position</option>
+            {% for position in positions %}
+            <option value="{{ position.posID }}" {% if candidate and candidate.posID == position.posID %}selected{% endif %}>
+                {{ position.posName }}
+            </option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>Status
+        <select name="candStat">
+            <option value="active" {% if not candidate or candidate.candStat == 'active' %}selected{% endif %}>Active</option>
+            <option value="inactive" {% if candidate and candidate.candStat == 'inactive' %}selected{% endif %}>Inactive</option>
+        </select>
+    </label>
+    <div class="form-actions">
+        <button class="btn" type="submit">{% if candidate %}Update{% else %}Add{% endif %}</button>
+        <a class="btn secondary" href="{{ url_for('candidates') }}">Back</a>
+    </div>
+</form>
+{% endblock %}

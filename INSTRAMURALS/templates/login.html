@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Login · UC Main Intramurals{% endblock %}
+{% block heading %}Login{% endblock %}
+{% block lede %}Students register on the home page. Everyone else signs in with the ID number the admin created. Login opens your profile.{% endblock %}
+{% block content %}
+<div class="split">
+    <form class="panel form-grid" method="post">
+        <div class="wide">
+            <label for="userName">ID number</label>
+            <input id="userName" name="userName" required maxlength="40" autocomplete="username" value="{{ form.userName }}">
+        </div>
+        <div class="wide">
+            <label for="password">Password</label>
+            <input id="password" type="password" name="password" required autocomplete="current-password">
+        </div>
+        <div class="actions">
+            <button type="submit">Login</button>
+        </div>
+    </form>
+    <aside class="credential">
+        <p class="eyebrow">Local Admin</p>
+        <p>This account is already in the Registration table. Use it to register people, create departments, and create events.</p>
+        <dl>
+            <div><dt>ID number</dt><dd>{{ local_admin_id }}</dd></div>
+            <div><dt>Password</dt><dd>{{ local_admin_password }}</dd></div>
+        </dl>
+    </aside>
+</div>
+{% endblock %}

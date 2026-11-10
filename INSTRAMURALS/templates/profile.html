@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% set current = posted or profile %}
+{% block title %}{{ page_title }} · UC Main Intramurals{% endblock %}
+{% block heading %}{{ page_title }}{% endblock %}
+{% block lede %}This record is stored in the {{ table_name }} table and linked to registration ID {{ session.userName }}.{% endblock %}
+{% block content %}
+{% if departments %}
+<form class="panel form-grid narrow" method="post">
+    <div>
+        <label for="fName">First name</label>
+        <input id="fName" name="fName" required maxlength="50" value="{{ current.fName if current else '' }}">
+    </div>
+    <div>
+        <label for="lName">Last name</label>
+        <input id="lName" name="lName" required maxlength="50" value="{{ current.lName if current else '' }}">
+    </div>
+    <div>
+        <label for="mobile">Mobile</label>
+        <input id="mobile" name="mobile" required maxlength="20" value="{{ current.mobile if current else '' }}" placeholder="09171234567">
+    </div>
+    <div>
+        <label for="deptID">Department</label>
+        {% if lock_department and current %}
+        <input type="hidden" id="deptID" name="deptID" value="{{ current.deptID }}">
+        <p class="id-banner">{{ current.deptName }} ({{ current.deptID }})</p>
+        <p class="field-help">The admin assigned this department.</p>
+        {% else %}
+        <select id="deptID" name="deptID" required>
+            <option value="">Select department</option>
+            {% for d in departments %}
+            <option value="{{ d.deptID }}" {% if current and current.deptID == d.deptID %}selected{% endif %}>{{ d.deptID }} — {{ d.deptName }}</option>
+            {% endfor %}
+        </select>
+        {% endif %}
+    </div>
+    <div class="actions">
+        <button type="submit">{% if profile %}Update profile{% else %}Save profile{% endif %}</button>
+    </div>
+</form>
+{% else %}
+<section class="panel">
+    <p>An admin has to create a department before this profile can be saved.</p>
+</section>
+{% endif %}
+{% endblock %}

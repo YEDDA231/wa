@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{% if position %}Update position{% else %}Add position{% endif %}{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div>
+        <h2>{% if position %}Update position{% else %}Add position{% endif %}</h2>
+        <p class="muted">Deactivating a position removes it from the live ballot.</p>
+    </div>
+</div>
+<form class="card form-card" method="post">
+    <label>Position name
+        <input name="posName" value="{{ position.posName if position else '' }}" required>
+    </label>
+    <label>Number of seats
+        <input name="numOfPositions" type="number" min="1" value="{{ position.numOfPositions if position else 1 }}" required>
+    </label>
+    <label>Status
+        <select name="posStat">
+            <option value="active" {% if not position or position.posStat == 'active' %}selected{% endif %}>Active</option>
+            <option value="inactive" {% if position and position.posStat == 'inactive' %}selected{% endif %}>Inactive</option>
+        </select>
+    </label>
+    <div class="form-actions">
+        <button class="btn" type="submit">{% if position %}Update{% else %}Add{% endif %}</button>
+        <a class="btn secondary" href="{{ url_for('positions') }}">Back</a>
+    </div>
+</form>
+{% endblock %}

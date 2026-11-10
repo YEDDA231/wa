@@ -1,0 +1,407 @@
+:root {
+    --paper: #f3eee6;
+    --sheet: #fffdf9;
+    --ink: #1c2421;
+    --muted: #5c675f;
+    --line: #ddd4c6;
+    --header: #1b3330;
+    --brass: #c6a15a;
+    --link: #0f5c56;
+    --danger: #8e2f2f;
+    --ok: #e7f3ec;
+    --ok-ink: #145c38;
+    --err: #f8e8e4;
+    --err-ink: #8a2e24;
+    --th: #243f3b;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    font-size: 16px;
+    line-height: 1.45;
+}
+
+.site-header {
+    background: var(--header);
+    color: #f4efe6;
+    border-bottom: 4px solid var(--brass);
+}
+
+.header-inner {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 22px 20px 18px;
+}
+
+.eyebrow {
+    margin: 0 0 4px;
+    color: #f0e2c8;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+h1 {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.7rem;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+h1 a {
+    color: inherit;
+    text-decoration: none;
+}
+
+h1 a:hover {
+    color: #fff;
+}
+
+main {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 28px 20px 72px;
+}
+
+h2 {
+    margin: 0 0 8px;
+    color: var(--header);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.65rem;
+    font-weight: 600;
+}
+
+.narrow {
+    max-width: 560px;
+}
+
+.prompt {
+    margin: 0 0 10px;
+    color: var(--muted);
+}
+
+.page-links {
+    margin: 0 0 16px;
+}
+
+.page-links span {
+    margin: 0 6px;
+    color: #b0a898;
+}
+
+a {
+    color: var(--link);
+}
+
+a:hover {
+    color: #083f3b;
+}
+
+.menu-list {
+    display: flex;
+    flex-direction: column;
+    background: var(--sheet);
+    border: 1px solid var(--line);
+}
+
+.menu-list a {
+    display: block;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line);
+    color: var(--link);
+    font-size: 1.05rem;
+    text-decoration: none;
+}
+
+.menu-list a:last-child {
+    border-bottom: 0;
+}
+
+.menu-list a:hover,
+.menu-list a:focus-visible {
+    background: #f3f7f4;
+}
+
+.flashes {
+    margin: 0 0 16px;
+    padding: 0;
+    list-style: none;
+}
+
+.flash {
+    margin: 0 0 8px;
+    padding: 10px 12px;
+    border: 1px solid transparent;
+}
+
+.flash.success {
+    background: var(--ok);
+    border-color: #b7dcc8;
+    color: var(--ok-ink);
+}
+
+.flash.error {
+    background: var(--err);
+    border-color: #ecc3bb;
+    color: var(--err-ink);
+}
+
+.table-wrap {
+    overflow-x: auto;
+    background: var(--sheet);
+    border: 1px solid var(--line);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--sheet);
+}
+
+th,
+td {
+    padding: 9px 12px;
+    border: 1px solid var(--line);
+    text-align: left;
+    vertical-align: middle;
+}
+
+th {
+    background: var(--th);
+    color: #f4efe6;
+    font-size: 0.92rem;
+    font-weight: 600;
+}
+
+tbody tr:nth-child(even) {
+    background: #faf7f2;
+}
+
+.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.actions form {
+    margin: 0;
+}
+
+button,
+input,
+select {
+    font: inherit;
+}
+
+button {
+    padding: 8px 14px;
+    border: 0;
+    background: var(--header);
+    color: #f4efe6;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #274843;
+}
+
+button.link {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--danger);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+button.link:hover {
+    color: #641f1f;
+    background: none;
+}
+
+.muted {
+    color: #5c564e;
+}
+
+tr.cancelled {
+    color: #5c564e;
+}
+
+tr.cancelled td.when {
+    text-decoration: line-through;
+}
+
+.empty {
+    color: var(--muted);
+    text-align: center;
+}
+
+.sheet-form,
+.inline-form,
+.summary,
+.identity,
+.hint {
+    max-width: 100%;
+}
+
+.sheet-form {
+    max-width: 460px;
+    padding: 18px;
+    background: var(--sheet);
+    border: 1px solid var(--line);
+}
+
+.sheet-form label,
+.inline-form label {
+    display: block;
+    margin: 14px 0 6px;
+    font-size: 0.92rem;
+}
+
+.sheet-form label:first-child {
+    margin-top: 0;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #c9c0b2;
+    border-radius: 2px;
+    background: #fff;
+    color: var(--ink);
+}
+
+input[readonly] {
+    background: #f0ebe3;
+    color: #3e463f;
+}
+
+input:focus-visible,
+select:focus-visible,
+button:focus-visible,
+a:focus-visible {
+    outline: 2px solid var(--header);
+    outline-offset: 2px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-top: 18px;
+}
+
+.inline-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+    align-items: end;
+    margin: 8px 0 18px;
+}
+
+.inline-form label {
+    margin: 0;
+}
+
+.inline-form input {
+    min-width: 190px;
+    margin-top: 6px;
+}
+
+.inline-form button {
+    height: 39px;
+}
+
+.identity {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 28px;
+    margin: 0 0 14px;
+}
+
+.summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 36px;
+    max-width: 720px;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+}
+
+.summary div {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 6px 0;
+}
+
+.summary span {
+    color: var(--muted);
+}
+
+.summary strong {
+    font-variant-numeric: tabular-nums;
+}
+
+.hint {
+    color: var(--muted);
+}
+
+@media (max-width: 700px) {
+    h1 {
+        font-size: 1.3rem;
+    }
+
+    h2 {
+        font-size: 1.35rem;
+    }
+
+    .summary {
+        grid-template-columns: 1fr;
+    }
+
+    .inline-form input {
+        width: 100%;
+    }
+}
+
+@media print {
+    body {
+        background: #fff;
+    }
+
+    .site-header {
+        color: #000;
+        background: #fff;
+        border-bottom: 1px solid #000;
+    }
+
+    .eyebrow,
+    .page-links,
+    .inline-form,
+    .flashes {
+        display: none;
+    }
+
+    th {
+        color: #000;
+        background: #eee;
+    }
+}

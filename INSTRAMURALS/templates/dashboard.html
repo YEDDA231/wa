@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · UC Main Intramurals{% endblock %}
+{% block heading %}Dashboard{% endblock %}
+{% block lede %}Signed in as {{ session.userName }} · {{ role_labels.get(session.role, session.role) }}. Log out to use another role.{% endblock %}
+{% block content %}
+{% for hint in hints %}
+<div class="hint">
+    <p>{{ hint.text }}</p>
+    <a class="button gold" href="{{ hint.href }}">{{ hint.label }}</a>
+</div>
+{% endfor %}
+
+{% if session.role == "admin" %}
+<div class="stats">
+    <article class="stat"><span>Departments</span><strong>{{ counts.departments }}</strong></article>
+    <article class="stat"><span>Accounts</span><strong>{{ counts.users }}</strong></article>
+    <article class="stat"><span>Managers</span><strong>{{ counts.managers }}</strong></article>
+    <article class="stat"><span>Coaches</span><strong>{{ counts.coaches }}</strong></article>
+    <article class="stat"><span>Deans</span><strong>{{ counts.deans }}</strong></article>
+    <article class="stat"><span>Events</span><strong>{{ counts.events }}</strong></article>
+    <article class="stat"><span>Athletes</span><strong>{{ counts.athletes }}</strong></article>
+</div>
+<section class="panel">
+    <h3>Admin path</h3>
+    <ol class="steps">
+        <li>Open Departments and create each college, for example CCS.</li>
+        <li>Use Register for a tournament manager, coach, or dean. Students can register themselves on the home page.</li>
+        <li>Those accounts log in and land on their own profile.</li>
+        <li>Create an event here or let the tournament manager create one. The event stays linked to that manager.</li>
+        <li>Open Participants and add the student to the event, with their department, coach, and dean.</li>
+    </ol>
+    <div class="link-row" style="margin-top: 14px;">
+        <a class="button" href="{{ url_for('departments') }}">Create department</a>
+        <a class="button gold" href="{{ url_for('register') }}">Register a user</a>
+        <a class="button secondary" href="{{ url_for('events') }}">Create event</a>
+    </div>
+</section>
+{% elif profile %}
+<section class="panel narrow">
+    <h3>Profile on file</h3>
+    {% if session.role == "athlete" %}
+    <p>{{ profile.firstName }} {{ profile.middleInit }} {{ profile.lastName }}</p>
+    <p class="field-help" style="margin-top: 8px;">{{ profile.course }} · {{ profile.year }} · {{ profile.deptName }}</p>
+    <p class="field-help">{{ profile.eventName }} ({{ profile.category }})</p>
+    {% else %}
+    <p>{{ profile.fName }} {{ profile.lName }}</p>
+    <p class="field-help" style="margin-top: 8px;">{{ profile.deptName }} ({{ profile.deptID }}) · {{ profile.mobile }}</p>
+    {% endif %}
+</section>
+{% else %}
+<section class="panel narrow">
+    <h3>Profile not saved yet</h3>
+    <p>Registration only stores the ID, password, and role. Open My Profile to add the rest of the record.</p>
+</section>
+{% endif %}
+{% endblock %}

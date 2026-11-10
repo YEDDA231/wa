@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Vote · Philippine National Election{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div>
+        <h2>Ballot</h2>
+        <p class="muted">{{ person_name(voter.voterFName, voter.voterMName, voter.voterLName) }} · {{ voter.voterID }}</p>
+    </div>
+</div>
+
+{% if blocked == 'inactive' %}
+<section class="card">
+    <h3>Account inactive</h3>
+    <p>This voter account is inactive, so it cannot cast a ballot.</p>
+</section>
+{% elif blocked == 'voted' %}
+<section class="card">
+    <h3>Ballot already recorded</h3>
+    <p>This voter has already voted and cannot vote again.</p>
+</section>
+{% else %}
+<form method="post">
+    {% for item in ballot %}
+    {% set position = item.position %}
+    <section class="card" data-max="{{ position.numOfPositions }}">
+        <h3>{{ position.posName }}</h3>
+        <p class="muted">Choose up to {{ position.numOfPositions }} candidate{% if position.numOfPositions != 1 %}s{% endif %}.</p>
+        {% if item.candidates %}
+            {% for cand in item.candidates %}
+            {% set field = 'choice_' ~ position.posID %}
+            <label class="choice">
+                <input
+                    type="{{ 'radio' if position.numOfPositions == 1 else 'checkbox' }}"
+                    name="{{ field }}"
+                    value="{{ cand.candID }}"
+                    {% if selected and (cand.candID|string) in selected.getlist(field) %}checked{% endif %}
+                >
+                <span>{{ person_name(cand.candFName, cand.candMName, cand.candLName) }}</span>
+            </label>
+            {% endfor %}
+        {% else %}
+            <p>No active candidates for this position.</p>
+        {% endif %}
+    </section>
+    {% else %}
+    <section class="card"><p>No positions are open for voting.</p></section>
+    {% endfor %}
+    {% if ballot %}
+    <button class="btn" type="submit">Submit ballot</button>
+    {% endif %}
+</form>
+{% endif %}
+
+<script>
+document.querySelectorAll("[data-max]").forEach(function (group) {
+    var max = Number(group.dataset.max);
+    group.querySelectorAll("input[type=checkbox]").forEach(function (box) {
+        box.addEventListener("change", function () {
+            var picked = group.querySelectorAll("input[type=checkbox]:checked").length;
+            if (picked > max) {
+                box.checked = false;
+                alert("You can select at most " + max + " for this position.");
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

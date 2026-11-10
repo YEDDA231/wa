@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="w3-row-padding w3-margin-top">
+	<div class="w3-col l8 m7 s12">
+		<div class="w3-margin-bottom">
+			<a href="{{ url_for('menu') }}" class="w3-button w3-small w3-light-grey">&laquo; Back to Menu</a>
+		</div>
+		<div class="w3-card-4 w3-round-large w3-padding">
+			<h4>Attendance</h4>
+			<form method="POST" class="w3-row-padding">
+				<div class="w3-third">
+					<label><b>Input ID Number</b></label>
+					<input type="text" name="idNum" class="w3-input" required>
+				</div>
+				<div class="w3-rest" style="margin-top:22px">
+					<button class="w3-button w3-blue w3-margin-right">Submit</button>
+				</div>
+			</form>
+
+			<hr>
+			<h5>Last Scanned / Searched</h5>
+			<table class="w3-table-all w3-small">
+				<tr class="w3-light-grey">
+					<th>ID Number</th>
+					<th>Campus</th>
+					<th>First Name</th>
+					<th>Last Name</th>
+					<th>Amount Paid</th>
+					<th>Attended</th>
+				</tr>
+				{% if record %}
+				<tr>
+					<td>{{ record["idNum"] }}</td>
+					<td>{{ record["campus"] }}</td>
+					<td>{{ record["studFName"] }}</td>
+					<td>{{ record["studLName"] }}</td>
+					<td>{{ "%.2f"|format(record["amountPaid"]) }}</td>
+					<td>{{ record["attended"] }}</td>
+				</tr>
+				{% else %}
+				<tr>
+					<td colspan="6" class="w3-center">No record selected yet.</td>
+				</tr>
+				{% endif %}
+			</table>
+
+			<div class="w3-margin-top w3-small">
+				<p><b>Note:</b></p>
+				<ol>
+					<li>Display appropriate prompt if ID is <span class="w3-text-red">NOT YET REGISTERED</span>.</li>
+					<li>Display appropriate prompt for <span class="w3-text-green">Student's Attendance is SUCCESSFULLY RECORDED</span>.</li>
+					<li>Display appropriate prompt for <span class="w3-text-orange">Student's Attendance RECORD ALREADY EXISTS</span>.</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% if status == "not_registered" %}
+	<div class="w3-panel w3-red w3-round w3-margin-top">
+		ID Number is <b>NOT YET REGISTERED</b>.
+	</div>
+{% elif status == "recorded" %}
+	<div class="w3-panel w3-green w3-round w3-margin-top">
+		Student's Attendance is <b>SUCCESSFULLY RECORDED</b>.
+	</div>
+{% elif status == "already_recorded" %}
+	<div class="w3-panel w3-amber w3-round w3-margin-top">
+		Student's Attendance <b>RECORD ALREADY EXISTS</b>.
+	</div>
+{% endif %}
+
+{% endblock %}
+

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}{% if voter %}Update voter{% else %}Add voter{% endif %}{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div>
+        <h2>{% if voter %}Update voter{% else %}Add voter{% endif %}</h2>
+        <p class="muted">New voters start as not yet voted.</p>
+    </div>
+</div>
+<form class="card form-card" method="post">
+    <label>Voter ID
+        <input name="voterID" value="{{ voter.voterID if voter else '' }}" {% if voter %}readonly{% endif %} required>
+    </label>
+    <label>Password
+        <input name="voterPass" value="{{ voter.voterPass if voter else '' }}" required>
+    </label>
+    <label>First name
+        <input name="voterFName" value="{{ voter.voterFName if voter else '' }}" required>
+    </label>
+    <label>Middle name
+        <input name="voterMName" value="{{ voter.voterMName if voter and voter.voterMName else '' }}">
+    </label>
+    <label>Last name
+        <input name="voterLName" value="{{ voter.voterLName if voter else '' }}" required>
+    </label>
+    <label>Status
+        <select name="voterStat">
+            <option value="active" {% if not voter or voter.voterStat == 'active' %}selected{% endif %}>Active</option>
+            <option value="inactive" {% if voter and voter.voterStat == 'inactive' %}selected{% endif %}>Inactive</option>
+        </select>
+    </label>
+    {% if voter %}
+    <p class="muted">Voted: {{ 'Yes' if voter.voted == 'y' else 'No' }}</p>
+    {% endif %}
+    <div class="form-actions">
+        <button class="btn" type="submit">{% if voter %}Update{% else %}Add{% endif %}</button>
+        <a class="btn secondary" href="{{ url_for('voters') }}">Back</a>
+    </div>
+</form>
+{% endblock %}

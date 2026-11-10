@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="h4 mb-0">Veterinarian Management</h2>
+  <a href="{{ url_for('vets_new') }}" class="btn btn-primary">New Veterinarian</a>
+</div>
+
+<form class="row g-2 mb-3" method="get">
+  <div class="col-sm-8">
+    <input type="text" name="q" class="form-control" placeholder="Search by ID, name, or specialization" value="{{ q }}">
+  </div>
+  <div class="col-sm-4">
+    <button class="btn btn-outline-secondary w-100" type="submit">Search</button>
+  </div>
+</form>
+
+<div class="card">
+  <div class="card-body table-responsive">
+    <table class="table table-hover align-middle">
+      <thead>
+        <tr>
+          <th>License / ID</th>
+          <th>Name</th>
+          <th>Specialization</th>
+          <th>Address</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for v in vets %}
+        <tr>
+          <td>{{ v.vetID }}</td>
+          <td>{{ v.vetFName }} {{ v.vetLName }}</td>
+          <td>{{ v.vetSpecial }}</td>
+          <td>{{ v.vetAddress }}</td>
+          <td class="text-end">
+            <a href="{{ url_for('vets_edit', vet_id=v.vetID) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+            <form action="{{ url_for('vets_delete', vet_id=v.vetID) }}" method="post" class="d-inline" onsubmit="return confirm('Logically delete this veterinarian?');">
+              <button class="btn btn-sm btn-outline-danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" class="text-center text-muted">No veterinarians found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="card-footer text-muted small">
+    Creating, reading, searching/updating, and logical deletion of veterinarian records.
+  </div>
+</div>
+{% endblock %}
+

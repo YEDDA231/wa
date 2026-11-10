@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Candidates · Philippine National Election{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div>
+        <h2>Candidates</h2>
+        <p class="muted">Inactive candidates stay on the results, and they are left off the ballot.</p>
+    </div>
+    <a class="btn" href="{{ url_for('add_candidate') }}">Add candidate</a>
+</div>
+<section class="card">
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        {% for row in candidates %}
+        <tr>
+            <td>{{ row.candID }}</td>
+            <td>{{ person_name(row.candFName, row.candMName, row.candLName) }}</td>
+            <td>{{ row.posName }}</td>
+            <td><span class="badge {{ row.candStat }}">{{ row.candStat }}</span></td>
+            <td>
+                <div class="actions">
+                    <a class="btn secondary" href="{{ url_for('edit_candidate', cand_id=row.candID) }}">Update</a>
+                    {% if row.candStat == 'active' %}
+                    <form method="post" action="{{ url_for('deactivate_candidate', cand_id=row.candID) }}" onsubmit="return confirm('Deactivate this candidate?');">
+                        <button class="btn danger" type="submit">Deactivate</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5">No candidates yet.</td></tr>
+        {% endfor %}
+    </table>
+</section>
+{% endblock %}

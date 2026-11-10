@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="h4 mb-0">Pet Owner Management</h2>
+  <a href="{{ url_for('owners_new') }}" class="btn btn-primary">New Pet Owner</a>
+</div>
+
+<form class="row g-2 mb-3" method="get">
+  <div class="col-sm-8">
+    <input type="text" name="q" class="form-control" placeholder="Search by ID or name" value="{{ q }}">
+  </div>
+  <div class="col-sm-4">
+    <button class="btn btn-outline-secondary w-100" type="submit">Search</button>
+  </div>
+</form>
+
+<div class="card">
+  <div class="card-body table-responsive">
+    <table class="table table-hover align-middle">
+      <thead>
+        <tr>
+          <th>Owner ID</th>
+          <th>Name</th>
+          <th>Birth Date</th>
+          <th>Telephone</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for o in owners %}
+        <tr>
+          <td>{{ o.petOwnerID }}</td>
+          <td>{{ o.petOwnerFName }} {{ o.petOwnerLName }}</td>
+          <td>{{ o.petOwnerBDate }}</td>
+          <td>{{ o.petOwnerTelNo }}</td>
+          <td class="text-end">
+            <a href="{{ url_for('owners_edit', owner_id=o.petOwnerID) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+            <form action="{{ url_for('owners_delete', owner_id=o.petOwnerID) }}" method="post" class="d-inline" onsubmit="return confirm('Logically delete this owner?');">
+              <button class="btn btn-sm btn-outline-danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" class="text-center text-muted">No owners found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="card-footer text-muted small">
+    Creating, reading, searching/updating, and logical deletion of pet owner records.
+  </div>
+</div>
+{% endblock %}
+

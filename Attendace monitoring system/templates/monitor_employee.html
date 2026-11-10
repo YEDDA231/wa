@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Attendance Monitoring by Employee{% endblock %}
+{% block content %}
+<h2>Attendance Monitoring (By Employee)</h2>
+<p class="page-links">
+    <a href="{{ url_for('monitoring') }}">Attendance Monitoring</a>
+    <span>|</span>
+    <a href="{{ url_for('menu') }}">Back to Menu</a>
+</p>
+<form method="get" class="inline-form" action="{{ url_for('monitor_employee') }}">
+    <label for="empID">Input Employee #
+        <input id="empID" name="empID" type="number" min="1" required autofocus value="{{ request.args.get('empID', '') }}">
+    </label>
+    <button type="submit">Show</button>
+</form>
+
+{% if report %}
+<p class="identity">
+    <span>Name: <strong>{{ report.employee.empLName }}, {{ report.employee.empName }}</strong></span>
+    <span>Department: <strong>{{ report.employee.depName }}</strong></span>
+</p>
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th scope="col">Record #</th>
+                <th scope="col">Emp. ID</th>
+                <th scope="col">Date/Time In</th>
+                <th scope="col">Date/Time Out</th>
+                <th scope="col" class="num">Hours</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in report.records %}
+            <tr>
+                <td>{{ record.attRN }}</td>
+                <td>{{ record.empID }}</td>
+                <td>{{ record.attTimeIn|when }}</td>
+                <td>{{ record.attTimeOut|when }}</td>
+                <td class="num">{{ "%.2f"|format(record.hours) }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" class="empty">No attendance records for this employee.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="summary">
+    <div><span>Rate Per Hour:</span> <strong>{{ report.employee.empRateHr|money }}</strong></div>
+    <div><span>Total Hours Worked:</span> <strong>{{ "%.2f"|format(report.total_hours) }}</strong></div>
+    <div><span>Salary:</span> <strong>{{ report.salary|money }}</strong></div>
+    <div><span>Date Generated:</span> <strong>{{ generated }}</strong></div>
+</div>
+{% elif not request.args.get('empID') %}
+<p class="hint">Enter an employee number to generate the report.</p>
+{% endif %}
+{% endblock %}

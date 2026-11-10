@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Results · Philippine National Election{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div>
+        <h2>Election results</h2>
+        <p class="muted">Voting percentage is the candidate's votes divided by all votes cast for that position.</p>
+    </div>
+</div>
+{% for block in results %}
+<section class="card">
+    <h3>{{ block.posName }}</h3>
+    <p class="muted">Votes counted: {{ block.votesCast }}</p>
+    <table>
+        <tr>
+            <th>Candidate</th>
+            <th class="num">Total Votes</th>
+            <th class="num">Voting %</th>
+        </tr>
+        {% for cand in block.candidates %}
+        <tr>
+            <td>{{ cand.name }}{% if cand.candStat != 'active' %} <span class="badge inactive">inactive</span>{% endif %}</td>
+            <td class="num">{{ cand.totalVotes }}</td>
+            <td class="num">{{ "%.2f"|format(cand.percentage) }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="3">No candidates for this position.</td></tr>
+        {% endfor %}
+    </table>
+</section>
+{% else %}
+<section class="card"><p>No positions to report.</p></section>
+{% endfor %}
+{% endblock %}

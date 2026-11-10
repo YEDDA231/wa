@@ -1,0 +1,117 @@
+{% extends 'base.html'%}
+{% block content %}
+	<div class="w3-row-padding">
+		<div class="w3-twothird">
+			<div class="w3-margin-bottom">
+				<a href="{{ url_for('menu') }}" class="w3-button w3-small w3-light-grey">&laquo; Back to Menu</a>
+			</div>
+			<h4>Registration List</h4>
+			<table class="w3-table-all w3-small w3-card-4">
+				<tr class="w3-light-grey">
+					<th>ID Number</th>
+					<th>Campus</th>
+					<th>First Name</th>
+					<th>Last Name</th>
+					<th>Amount Paid</th>
+					<th>Attended</th>
+					<th>Actions</th>
+				</tr>
+				{% for reg in registrations %}
+				<tr>
+					<td>{{ reg["idNum"] }}</td>
+					<td>{{ reg["campus"] }}</td>
+					<td>{{ reg["studFName"] }}</td>
+					<td>{{ reg["studLName"] }}</td>
+					<td>{{ "%.2f"|format(reg["amountPaid"]) }}</td>
+					<td>
+						<span class="w3-tag {% if reg['attended'] == 'Yes' %}w3-green{% else %}w3-red{% endif %}">
+							{{ reg["attended"] }}
+						</span>
+					</td>
+					<td>
+						<button type="button"
+								class="w3-button w3-tiny w3-green w3-margin-right"
+								onclick="loadForEdit('{{ reg['idNum'] }}','{{ reg['campus'] }}','{{ reg['studFName'] }}','{{ reg['studLName'] }}','{{ '%.2f'|format(reg['amountPaid']) }}','{{ reg['attended'] }}')">
+							Edit
+						</button>
+						<form method="POST" action="{{ url_for('delete', id_num=reg['idNum']) }}" style="display:inline;">
+							<button class="w3-button w3-tiny w3-red" onclick="return confirm('Delete this registration?');">
+								Delete
+							</button>
+						</form>
+					</td>
+				</tr>
+				{% else %}
+				<tr>
+					<td colspan="7" class="w3-center">No registrations yet.</td>
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
+
+		<div class="w3-third w3-container">
+			<div class="w3-center">
+				<img width="120px" src="{{ url_for('static',filename='image/usericon.png') }}" class="w3-circle w3-border">
+			</div>
+			<div class="w3-card-4 w3-round-xlarge w3-padding w3-margin-top">
+				<h4>New / Edit Registration</h4>
+				<form method="POST">
+					<input type="hidden" name="originalIdNum" id="form_originalIdNum">
+					<p>
+						<label><b>ID Number</b></label>
+						<input type="text" name="idNum" id="form_idNum" class="w3-input" required>
+					</p>
+					<p>
+						<label><b>Campus</b></label>
+						<input type="text" name="campus" id="form_campus" class="w3-input" required placeholder="Main / Banilad / CLM">
+					</p>
+					<p class="w3-row-padding">
+						<div class="w3-half">
+							<label><b>First Name</b></label>
+							<input type="text" name="studFName" id="form_studFName" class="w3-input" required>
+						</div>
+						<div class="w3-half">
+							<label><b>Last Name</b></label>
+							<input type="text" name="studLName" id="form_studLName" class="w3-input" required>
+						</div>
+					</p>
+					<p>
+						<label><b>Amount Paid</b></label>
+						<input type="number" min="0" step="0.01" name="amountPaid" id="form_amountPaid" class="w3-input" required>
+					</p>
+					<p>
+						<label><b>Attended</b></label>
+						<select name="attended" id="form_attended" class="w3-select">
+							<option value="Yes">Yes</option>
+							<option value="No" selected>No</option>
+						</select>
+					</p>
+					<p class="w3-center">
+						<input type="reset" value="Clear" class="w3-button w3-red w3-margin-right">
+						<input type="submit" value="Save" class="w3-button w3-blue">
+					</p>
+					<p class="w3-small w3-center">
+						Tip: Click <b>Edit</b> in the table to load a record into this form.
+					</p>
+				</form>
+			</div>
+		</div>
+	</div>
+	<script>
+		function loadForEdit(idNum, campus, firstName, lastName, amountPaid, attended) {
+			document.getElementById('form_originalIdNum').value = idNum;
+			const idInput = document.getElementById('form_idNum');
+			idInput.value = idNum;
+			idInput.readOnly = true;
+
+			document.getElementById('form_campus').value = campus;
+			document.getElementById('form_studFName').value = firstName;
+			document.getElementById('form_studLName').value = lastName;
+			document.getElementById('form_amountPaid').value = amountPaid;
+
+			const attendedSelect = document.getElementById('form_attended');
+			attendedSelect.value = attended === 'Yes' ? 'Yes' : 'No';
+		}
+	</script>
+{% endblock %}
+

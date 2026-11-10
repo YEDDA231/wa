@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Registration · UC Main Intramurals{% endblock %}
+{% block heading %}Registration{% endblock %}
+{% block lede %}For a coach, dean, or tournament manager, choose the department they belong to. They then see the students in that department.{% endblock %}
+{% block content %}
+{% if not departments %}
+<section class="panel">
+    <p>Create a department before registering a coach, dean, or tournament manager.</p>
+    <a class="button" href="{{ url_for('departments') }}">Departments</a>
+</section>
+{% endif %}
+<form class="panel form-grid narrow" method="post">
+    <div>
+        <label for="userName">ID number</label>
+        <input id="userName" name="userName" required maxlength="40" autocomplete="username" value="{{ form.userName }}" placeholder="2024-00123">
+        <p class="field-help">Student or employee ID. Letters, numbers, and hyphens.</p>
+    </div>
+    <div>
+        <label for="role">Role</label>
+        <select id="role" name="role" required>
+            <option value="" disabled {% if not form.role %}selected{% endif %}>Select role</option>
+            {% for value, label in register_roles %}
+            <option value="{{ value }}" {% if form.role == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div id="staff-fields" class="wide form-grid" {% if form.role not in ["coach", "dean", "tournament manager"] %}hidden{% endif %}>
+        <div>
+            <label for="fName">First name</label>
+            <input id="fName" name="fName" maxlength="50" value="{{ form.fName }}">
+        </div>
+        <div>
+            <label for="lName">Last name</label>
+            <input id="lName" name="lName" maxlength="50" value="{{ form.lName }}">
+        </div>
+        <div>
+            <label for="mobile">Mobile</label>
+            <input id="mobile" name="mobile" maxlength="20" value="{{ form.mobile }}" placeholder="09171234567">
+        </div>
+        <div>
+            <label for="deptID">Department</label>
+            <select id="deptID" name="deptID">
+                <option value="">Select department</option>
+                {% for d in departments %}
+                <option value="{{ d.deptID }}" {% if form.deptID == d.deptID %}selected{% endif %}>{{ d.deptID }} — {{ d.deptName }}</option>
+                {% endfor %}
+            </select>
+            <p class="field-help">This is the college the coach, dean, or tournament manager will see.</p>
+        </div>
+    </div>
+    <div>
+        <label for="password">Password</label>
+        <input id="password" type="password" name="password" required autocomplete="new-password" title="Use letters, numbers, and a special character">
+        <p class="field-help">Letters, numbers, and a special character. Example: Player#2026</p>
+    </div>
+    <div>
+        <label for="confirmPassword">Confirm password</label>
+        <input id="confirmPassword" type="password" name="confirmPassword" required autocomplete="new-password">
+    </div>
+    <div class="actions">
+        <button type="submit">Register</button>
+        <a class="button secondary" href="{{ url_for('users') }}">View registrations</a>
+    </div>
+</form>
+{% endblock %}
+{% block scripts %}
+<script>
+function toggleStaffFields() {
+    var role = document.getElementById("role").value;
+    var box = document.getElementById("staff-fields");
+    var show = role === "coach" || role === "dean" || role === "tournament manager";
+    box.hidden = !show;
+    Array.prototype.forEach.call(box.querySelectorAll("input, select"), function (field) {
+        field.required = show;
+    });
+}
+document.getElementById("role").addEventListener("change", toggleStaffFields);
+toggleStaffFields();
+</script>
+{% endblock %}

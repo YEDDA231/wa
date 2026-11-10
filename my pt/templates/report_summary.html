@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="w3-row-padding w3-margin-top">
+	<div class="w3-col l8 m9 s12">
+		<div class="w3-margin-bottom">
+			<a href="{{ url_for('menu') }}" class="w3-button w3-small w3-light-grey">&laquo; Back to Menu</a>
+		</div>
+		<div class="w3-card-4 w3-round-large w3-padding">
+			<h4>Summary Report (All Campuses)</h4>
+			<table class="w3-table-all w3-small">
+				<tr class="w3-light-grey">
+					<th>Campus</th>
+					<th>Registered</th>
+					<th>Attended</th>
+					<th>Total Collection</th>
+				</tr>
+				{% for r in rows %}
+				<tr>
+					<td>{{ r["campus"] }}</td>
+					<td>{{ r["registered"] }}</td>
+					<td>{{ r["attended"] }}</td>
+					<td>{{ "%.2f"|format(r["total_collection"]) }}</td>
+				</tr>
+				{% endfor %}
+				<tr class="w3-pale-blue">
+					<td><b>TOTALS</b></td>
+					<td><b>{{ total_registered }}</b></td>
+					<td><b>{{ total_attended }}</b></td>
+					<td><b>{{ "%.2f"|format(total_collection) }}</b></td>
+				</tr>
+			</table>
+			<div class="w3-right w3-small w3-margin-top">
+				Date Generated: {{ today.strftime("%m/%d/%Y") }}
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
