@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="w3-row-padding w3-margin-top">
+	<div class="w3-col l10 m10 s12">
+		<div class="w3-margin-bottom">
+			<a href="{{ url_for('menu') }}" class="w3-button w3-small w3-light-grey">&laquo; Back to Menu</a>
+		</div>
+		<div class="w3-card-4 w3-round-large w3-padding">
+			<h4>Report (By Campus)</h4>
+			<form method="POST" class="w3-row-padding w3-small">
+				<div class="w3-third">
+					<p><b>Select Campus:</b></p>
+					<p>
+						<label class="w3-margin-right">
+							<input type="radio" name="campus" value="Main" {% if campus == 'Main' %}checked{% endif %}> Main
+						</label>
+						<label class="w3-margin-right">
+							<input type="radio" name="campus" value="Banilad" {% if campus == 'Banilad' %}checked{% endif %}> Banilad
+						</label>
+						<label class="w3-margin-right">
+							<input type="radio" name="campus" value="LM" {% if campus == 'LM' %}checked{% endif %}> LM
+						</label>
+					</p>
+				</div>
+				<div class="w3-rest" style="margin-top:22px">
+					<button class="w3-button w3-blue">Generate Report</button>
+				</div>
+			</form>
+
+			<hr>
+			<h5>Registrants{% if campus %} - {{ campus }} Campus{% endif %}</h5>
+			<table class="w3-table-all w3-small">
+				<tr class="w3-light-grey">
+					<th>#</th>
+					<th>ID Number</th>
+					<th>Name</th>
+					<th>Campus</th>
+					<th>Amount Paid</th>
+					<th>Attended</th>
+				</tr>
+				{% if rows %}
+					{% for r in rows %}
+					<tr>
+						<td>{{ loop.index }}</td>
+						<td>{{ r["idNum"] }}</td>
+						<td>{{ r["studLName"] }}, {{ r["studFName"] }}</td>
+						<td>{{ r["campus"] }}</td>
+						<td>{{ "%.2f"|format(r["amountPaid"]) }}</td>
+						<td>{{ r["attended"] }}</td>
+					</tr>
+					{% endfor %}
+					<tr class="w3-pale-blue">
+						<td colspan="3"><b># of Registrants:</b> {{ total_registered }}</td>
+						<td colspan="2"><b>Total Collection:</b> {{ "%.2f"|format(total_collection) }}</td>
+						<td><b>Date Generated:</b> {{ today.strftime("%m/%d/%Y") }}</td>
+					</tr>
+				{% else %}
+					<tr>
+						<td colspan="6" class="w3-center">No data to display. Please select a campus and click "Generate Report".</td>
+					</tr>
+				{% endif %}
+			</table>
+		</div>
+	</div>
+</div>
+{% endblock %}
+

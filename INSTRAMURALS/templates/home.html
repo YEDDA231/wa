@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Home · UC Main Intramurals{% endblock %}
+{% block heading %}Intramurals{% endblock %}
+{% block lede %}Students and participants register here. Coaches, deans, and tournament managers are registered by the admin.{% endblock %}
+{% block content %}
+<section class="hero">
+    <p class="eyebrow">University of Cebu · Main Campus</p>
+    <h3>Register as a student or participant.</h3>
+    <p>Create your account with your ID number, then log in. Your profile opens next, and a coach, dean, and event can be linked to you.</p>
+    <div class="link-row">
+        <a class="button" href="{{ url_for('login') }}">Already registered? Login</a>
+    </div>
+</section>
+
+<div class="split" id="register">
+    <form class="panel form-grid" method="post" action="{{ url_for('home') }}#register">
+        <div class="wide">
+            <h3>Student / participant registration</h3>
+            <p class="field-help">This account is saved as a student. Staff accounts are created by the admin.</p>
+        </div>
+        <div class="wide">
+            <label for="userName">ID number</label>
+            <input id="userName" name="userName" required maxlength="40" autocomplete="username" value="{{ form.userName }}" placeholder="2024-00123">
+            <p class="field-help">Letters, numbers, and hyphens.</p>
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input id="password" type="password" name="password" required autocomplete="new-password" title="Use letters, numbers, and a special character">
+            <p class="field-help">Letters, numbers, and a special character. Example: Player#2026</p>
+        </div>
+        <div>
+            <label for="confirmPassword">Confirm password</label>
+            <input id="confirmPassword" type="password" name="confirmPassword" required autocomplete="new-password">
+        </div>
+        <div class="actions">
+            <button class="gold" type="submit">Register</button>
+        </div>
+    </form>
+    <aside class="credential">
+        <p class="eyebrow">After you register</p>
+        <p>Log in with the same ID number. You will open your athlete profile, where your department, coach, dean, and event are connected.</p>
+        <dl>
+            <div><dt>Role</dt><dd>Student / Participant</dd></div>
+            <div><dt>Staff accounts</dt><dd>Admin only</dd></div>
+        </dl>
+    </aside>
+</div>
+
+<div class="cards">
+    <article class="card">
+        <h3>Departments</h3>
+        <p>The admin creates each college. Your profile uses that department.</p>
+    </article>
+    <article class="card">
+        <h3>Events</h3>
+        <p>An admin or a tournament manager creates the event and links it to a tournament manager.</p>
+    </article>
+    <article class="card">
+        <h3>Participants</h3>
+        <p>After you register, an admin or tournament manager can add you to an event with your coach and dean.</p>
+    </article>
+    <article class="card">
+        <h3>Local admin</h3>
+        <p>Staff registration uses {{ local_admin_id }}. Password {{ local_admin_password }}.</p>
+    </article>
+</div>
+{% endblock %}

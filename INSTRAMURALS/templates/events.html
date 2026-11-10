@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block title %}Events · UC Main Intramurals{% endblock %}
+{% block heading %}Events{% endblock %}
+{% block lede %}Students register for an open event here. An admin or tournament manager creates the event and links it to a tournament manager.{% endblock %}
+{% block content %}
+{% if show_form %}
+<form class="panel form-grid narrow" method="post">
+    <input type="hidden" name="eventID" value="{{ event_form.eventID }}">
+    {% if session.role == "admin" %}
+    <div class="wide">
+        <label for="tournamentManager">Tournament manager</label>
+        <select id="tournamentManager" name="tournamentManager" required>
+            <option value="">Select tournament manager</option>
+            {% for manager in managers %}
+            <option value="{{ manager.userName }}" {% if event_form.tournamentManager == manager.userName %}selected{% endif %}>
+                {{ manager.lName }}, {{ manager.fName }} ({{ manager.userName }}) — {{ manager.deptID }}
+            </option>
+            {% endfor %}
+        </select>
+        <p class="field-help">The event is stored with this manager's ID.</p>
+    </div>
+    {% else %}
+    <div class="wide">
+        <p class="id-banner">Linked to your profile <strong>{{ session.userName }}</strong></p>
+    </div>
+    {% endif %}
+    <div>
+        <label for="category">Category</label>
+        <select id="category" name="category" required>
+            <option value="">Select category</option>
+            {% for category in categories %}
+            <option value="{{ category }}" {% if event_form.category == category %}selected{% endif %}>{{ category }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label for="noOfParticipant">Number of participants</label>
+        <input id="noOfParticipant" type="number" name="noOfParticipant" min="1" max="500" required value="{{ event_form.noOfParticipant }}">
+    </div>
+    <div class="wide">
+        <label for="eventName">Event name</label>
+        <input id="eventName" name="eventName" required maxlength="80" value="{{ event_form.eventName }}" placeholder="Volleyball Men">
+    </div>
+    <div class="actions">
+        <button type="submit">{% if event_form.eventID %}Update event{% else %}Create event{% endif %}</button>
+        {% if event_form.eventID %}
+        <a class="button secondary" href="{{ url_for('events') }}">Cancel edit</a>
+        {% endif %}
+    </div>
+</form>
+{% elif session.role == "tournament manager" %}
+<div class="hint">
+    <p>Save your tournament manager profile before creating an event.</p>
+    <a class="button gold" href="{{ url_for('profile') }}">My Profile</a>
+</div>
+{% elif session.role == "admin" %}
+<div class="hint">
+    <p>A tournament manager has to save a profile before an event can be linked to them.</p>
+    <a class="button gold" href="{{ url_for('register') }}">Register</a>
+</div>
+{% endif %}
+
+<section class="panel">
+    <h3>Event list</h3>
+    {% if events %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Category</th>
+                    <th>Event</th>
+                    <th>Slots</th>
+                    <th>Joined</th>
+                    <th>Tournament manager</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for e in events %}
+                <tr>
+                    <td>{{ e.eventID }}</td>
+                    <td><span class="tag">{{ e.category }}</span></td>
+                    <td>{{ e.eventName }}</td>
+                    <td>{{ e.noOfParticipant }}</td>
+                    <td>{{ e.joined }}</td>
+                    <td>{{ e.managerFirst }} {{ e.managerLast }} <span class="muted">({{ e.tournamentManager }})</span></td>
+                    <td>
+                        {% if session.role == "athlete" %}
+                            {% if athlete_event_id == e.eventID %}
+                            <span class="tag">Registered</span>
+                            {% elif e.joined >= e.noOfParticipant %}
+                            <span class="muted">Full</span>
+                            {% else %}
+                            <form method="post">
+                                <input type="hidden" name="action" value="register">
+                                <input type="hidden" name="eventID" value="{{ e.eventID }}">
+                                <button type="submit">Register</button>
+                            </form>
+                            {% endif %}
+                        {% endif %}
+                        {% if session.role == "coach" and e.joined < e.noOfParticipant %}
+                        <a href="{{ url_for('athletes', event=e.eventID) }}">Register student</a>
+                        {% endif %}
+                        {% if session.role == "admin" or session.get("userName") == e.tournamentManager %}
+                        <a href="{{ url_for('events', edit=e.eventID) }}">Edit</a>
+                        <a href="{{ url_for('athletes', event=e.eventID) }}">Add participant</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="empty">No events yet.</p>
+    {% endif %}
+</section>
+{% endblock %}

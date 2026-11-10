@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Philippine National Election{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="site-header">
+        <div class="flag-bar"></div>
+        <div class="header-inner">
+            <div class="brand">
+                <div class="seal">PN</div>
+                <div>
+                    <p class="eyebrow">National election practice system</p>
+                    <h1>Philippine National Election</h1>
+                </div>
+            </div>
+            {% set ep = request.endpoint %}
+            <nav>
+                <a href="{{ url_for('home') }}" class="{% if ep == 'home' %}active{% endif %}">Home</a>
+                <a href="{{ url_for('positions') }}" class="{% if ep in ['positions', 'add_position', 'edit_position'] %}active{% endif %}">Positions</a>
+                <a href="{{ url_for('candidates') }}" class="{% if ep in ['candidates', 'add_candidate', 'edit_candidate'] %}active{% endif %}">Candidates</a>
+                <a href="{{ url_for('voters') }}" class="{% if ep in ['voters', 'add_voter', 'edit_voter'] %}active{% endif %}">Voters</a>
+                <a href="{{ url_for('vote') }}" class="{% if ep in ['vote', 'login'] %}active{% endif %}">Vote</a>
+                <a href="{{ url_for('results') }}" class="{% if ep == 'results' %}active{% endif %}">Results</a>
+                <a href="{{ url_for('winners') }}" class="{% if ep == 'winners' %}active{% endif %}">Winners</a>
+            </nav>
+            {% if session.voterID %}
+            <div class="session-chip">
+                <span>Signed in as {{ session.voterName }} ({{ session.voterID }})</span>
+                <a href="{{ url_for('logout') }}">Log out</a>
+            </div>
+            {% endif %}
+        </div>
+    </header>
+    <main>
+        <div class="wrap">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endwith %}
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Voter login · Philippine National Election{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div>
+        <h2>Voter login</h2>
+        <p class="muted">Use the voter ID as the username and the voter password.</p>
+    </div>
+</div>
+<div class="login-layout">
+    <form class="card form-card" method="post">
+        <label>Voter ID
+            <input name="voterID" required autofocus>
+        </label>
+        <label>Password
+            <input name="voterPass" type="password" required>
+        </label>
+        <button class="btn" type="submit">Sign in</button>
+    </form>
+    <section class="card sample">
+        <h3>Sample accounts</h3>
+        <p class="muted">Password for every sample voter is <strong>election</strong>.</p>
+        <table>
+            <tr><th>Voter ID</th><th>What to expect</th></tr>
+            <tr><td>V009</td><td>Active, has not voted</td></tr>
+            <tr><td>V001</td><td>Active, already voted</td></tr>
+            <tr><td>V011</td><td>Inactive, cannot vote</td></tr>
+        </table>
+    </section>
+</div>
+{% endblock %}

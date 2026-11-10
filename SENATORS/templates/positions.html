@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Positions · Philippine National Election{% endblock %}
+{% block content %}
+<div class="page-head">
+    <div>
+        <h2>Positions</h2>
+        <p class="muted">The number of seats is also the maximum number of candidates a voter may choose.</p>
+    </div>
+    <a class="btn" href="{{ url_for('add_position') }}">Add position</a>
+</div>
+<section class="card">
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Position</th>
+            <th class="num">Seats</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        {% for row in positions %}
+        <tr>
+            <td>{{ row.posID }}</td>
+            <td>{{ row.posName }}</td>
+            <td class="num">{{ row.numOfPositions }}</td>
+            <td><span class="badge {{ row.posStat }}">{{ row.posStat }}</span></td>
+            <td>
+                <div class="actions">
+                    <a class="btn secondary" href="{{ url_for('edit_position', pos_id=row.posID) }}">Update</a>
+                    {% if row.posStat == 'active' %}
+                    <form method="post" action="{{ url_for('deactivate_position', pos_id=row.posID) }}" onsubmit="return confirm('Deactivate this position?');">
+                        <button class="btn danger" type="submit">Deactivate</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5">No positions yet.</td></tr>
+        {% endfor %}
+    </table>
+</section>
+{% endblock %}

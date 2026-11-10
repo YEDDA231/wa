@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Departments · UC Main Intramurals{% endblock %}
+{% block heading %}Department Management{% endblock %}
+{% block lede %}Create the ID and name of each college or department. Other roles choose from this list.{% endblock %}
+{% block content %}
+<form class="panel form-grid narrow" method="post">
+    <input type="hidden" name="action" value="create">
+    <div>
+        <label for="deptID">Department ID</label>
+        <input id="deptID" name="deptID" required maxlength="20" value="{{ form.deptID }}" placeholder="CCS">
+        <p class="field-help">Short code, such as CCS, COE, or CBA.</p>
+    </div>
+    <div>
+        <label for="deptName">Department name</label>
+        <input id="deptName" name="deptName" required maxlength="80" value="{{ form.deptName }}" placeholder="College of Computer Studies">
+    </div>
+    <div class="actions">
+        <button type="submit">Create department</button>
+    </div>
+</form>
+
+<section class="panel">
+    <h3>Departments</h3>
+    {% if departments %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Department ID</th>
+                    <th>Department name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in departments %}
+                <tr>
+                    <td>{{ d.deptID }}</td>
+                    <td>
+                        <form method="post" class="inline-form">
+                            <input type="hidden" name="action" value="rename">
+                            <input type="hidden" name="deptID" value="{{ d.deptID }}">
+                            <input class="compact" type="text" name="deptName" value="{{ d.deptName }}" required maxlength="80" aria-label="Department name for {{ d.deptID }}">
+                            <button type="submit">Rename</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="empty">No departments yet.</p>
+    {% endif %}
+</section>
+{% endblock %}

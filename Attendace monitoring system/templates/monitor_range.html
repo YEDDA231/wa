@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Attendance Monitoring by Date Range{% endblock %}
+{% block content %}
+<h2>Attendance Monitoring (Date Range)</h2>
+<p class="page-links">
+    <a href="{{ url_for('monitoring') }}">Attendance Monitoring</a>
+    <span>|</span>
+    <a href="{{ url_for('menu') }}">Back to Menu</a>
+</p>
+<form method="get" class="inline-form" action="{{ url_for('monitor_range') }}">
+    <label for="date_from">Date From
+        <input id="date_from" name="date_from" type="date" required value="{{ request.args.get('date_from', '') }}">
+    </label>
+    <label for="date_to">Date To
+        <input id="date_to" name="date_to" type="date" required value="{{ request.args.get('date_to', '') }}">
+    </label>
+    <button type="submit">Show</button>
+</form>
+
+{% if report %}
+<p class="identity">
+    <span>{{ report.date_from }} to {{ report.date_to }}</span>
+</p>
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th scope="col">Record #</th>
+                <th scope="col">Emp. ID</th>
+                <th scope="col">Date/Time In</th>
+                <th scope="col">Date/Time Out</th>
+                <th scope="col" class="num">Hours</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in report.records %}
+            <tr>
+                <td>{{ record.attRN }}</td>
+                <td>{{ record.empID }}</td>
+                <td>{{ record.attTimeIn|when }}</td>
+                <td>{{ record.attTimeOut|when }}</td>
+                <td class="num">{{ "%.2f"|format(record.hours) }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" class="empty">No attendance records in this date range.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="summary">
+    <div><span>Total Hours:</span> <strong>{{ "%.2f"|format(report.total_hours) }}</strong></div>
+    <div><span>Date Generated:</span> <strong>{{ generated }}</strong></div>
+</div>
+{% elif not request.args.get('date_from') and not request.args.get('date_to') %}
+<p class="hint">Choose a date range to generate the report.</p>
+{% endif %}
+{% endblock %}

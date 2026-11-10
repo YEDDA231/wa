@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}UC Main Intramurals{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="app">
+    <aside class="sidebar">
+        <div class="brand">
+            <svg class="mark-svg" viewBox="0 0 64 64" aria-hidden="true">
+                <path fill="#e0b85a" d="M32 3l24 8v20c0 15-10 26-24 31C18 57 8 46 8 31V11z"/>
+                <path fill="#10281f" d="M32 8l18 6v16c0 12-8 20-18 24-10-4-18-12-18-24V14z"/>
+                <text x="32" y="38" text-anchor="middle" font-size="16" font-family="Arial, sans-serif" fill="#e0b85a" font-weight="700">UC</text>
+            </svg>
+            <div>
+                <p class="brand-kicker">University of Cebu</p>
+                <strong>UC Main</strong>
+            </div>
+        </div>
+        <p class="menu-label">MENU</p>
+        <nav aria-label="Menu">
+            {% for item in menu %}
+            <a href="{{ url_for(item.endpoint) }}{% if item.anchor %}#{{ item.anchor }}{% endif %}" {% if item.endpoint == request.endpoint and not item.anchor %}class="active" aria-current="page"{% endif %}>{{ item.label }}</a>
+            {% endfor %}
+        </nav>
+        <div class="sidebar-foot">
+            {% if session.get('userName') %}
+            <span class="who">{{ session.get('userName') }}</span>
+            <span class="role-pill">{{ role_labels.get(session.get('role'), session.get('role')) }}</span>
+            {% else %}
+            <span class="who">Not signed in</span>
+            {% endif %}
+        </div>
+    </aside>
+    <div class="main">
+        <header class="topbar">
+            <p class="eyebrow">UC Main · Online Intramurals System</p>
+            <h2>{% block heading %}UC Main Intramurals{% endblock %}</h2>
+            <p class="lede">{% block lede %}{% endblock %}</p>
+        </header>
+        <section class="content">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endwith %}
+            {% block content %}{% endblock %}
+        </section>
+    </div>
+</div>
+{% block scripts %}{% endblock %}
+</body>
+</html>

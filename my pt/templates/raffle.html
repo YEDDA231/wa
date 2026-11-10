@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="w3-row-padding w3-margin-top">
+	<div class="w3-col l8 m8 s12">
+		<div class="w3-margin-bottom">
+			<a href="{{ url_for('menu') }}" class="w3-button w3-small w3-light-grey">&laquo; Back to Menu</a>
+		</div>
+		<div class="w3-card-4 w3-round-large w3-padding">
+			<h4>Raffle</h4>
+			<form method="POST" class="w3-margin-bottom">
+				<p><b>Set filters here:</b></p>
+				<p class="w3-small">
+					<label class="w3-margin-right">
+						<input type="radio" name="campus" value="All" {% if campus == 'All' %}checked{% endif %}> All
+					</label>
+					<label class="w3-margin-right">
+						<input type="radio" name="campus" value="Main" {% if campus == 'Main' %}checked{% endif %}> Main
+					</label>
+					<label class="w3-margin-right">
+						<input type="radio" name="campus" value="Banilad" {% if campus == 'Banilad' %}checked{% endif %}> Banilad
+					</label>
+					<label class="w3-margin-right">
+						<input type="radio" name="campus" value="LM" {% if campus == 'LM' %}checked{% endif %}> LM
+					</label>
+				</p>
+				<button class="w3-button w3-blue w3-margin-top">Reveal the Lucky Winner!</button>
+			</form>
+
+			<div class="w3-section">
+				<h5>Winner</h5>
+				<table class="w3-table-all w3-small">
+					<tr class="w3-light-grey">
+						<th>ID Number</th>
+						<th>Name</th>
+						<th>Campus</th>
+					</tr>
+					{% if winner %}
+					<tr>
+						<td>{{ winner["idNum"] }}</td>
+						<td>{{ winner["studFName"] }} {{ winner["studLName"] }}</td>
+						<td>{{ winner["campus"] }}</td>
+					</tr>
+					{% else %}
+					<tr>
+						<td colspan="3" class="w3-center">No winner selected yet.</td>
+					</tr>
+					{% endif %}
+				</table>
+				{% if winner %}
+				<div class="w3-panel w3-green w3-round-large w3-center w3-xlarge w3-margin-top">
+					<b>CONGRATULATIONS!!!</b>
+				</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+

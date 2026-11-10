@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block title %}Athlete Profile · UC Main Intramurals{% endblock %}
+{% block heading %}Athlete Profile{% endblock %}
+{% block lede %}Save this profile, then open Events and choose Register on the event you want to join.{% endblock %}
+{% block content %}
+{% if missing %}
+<section class="panel">
+    <h3>Waiting on other records</h3>
+    <p>This profile links to a department, an event, a coach, and a dean. These still need to be created:</p>
+    <ul class="missing">
+        {% for item in missing %}
+        <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+</section>
+{% else %}
+<form class="panel form-grid" method="post" id="athlete-form">
+    <div class="wide">
+        <p class="id-banner">ID number <strong>{{ id_num }}</strong></p>
+    </div>
+    <div>
+        <label for="lastName">Last name</label>
+        <input id="lastName" name="lastName" required maxlength="50" value="{{ form.lastName }}">
+    </div>
+    <div>
+        <label for="firstName">First name</label>
+        <input id="firstName" name="firstName" required maxlength="50" value="{{ form.firstName }}">
+    </div>
+    <div>
+        <label for="middleInit">Middle initial</label>
+        <input id="middleInit" name="middleInit" maxlength="3" value="{{ form.middleInit }}">
+    </div>
+    <div>
+        <label for="course">Course</label>
+        <input id="course" name="course" required maxlength="40" value="{{ form.course }}" placeholder="BSIT">
+    </div>
+    <div>
+        <label for="year">Year</label>
+        <select id="year" name="year" required>
+            <option value="">Select year</option>
+            {% for year in years %}
+            <option value="{{ year }}" {% if form.year == year %}selected{% endif %}>{{ year }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label for="civilStatus">Civil status</label>
+        <select id="civilStatus" name="civilStatus" required>
+            <option value="">Select civil status</option>
+            {% for status in civil_statuses %}
+            <option value="{{ status }}" {% if form.civilStatus == status %}selected{% endif %}>{{ status }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label for="gender">Gender</label>
+        <select id="gender" name="gender" required>
+            <option value="">Select gender</option>
+            {% for gender in genders %}
+            <option value="{{ gender }}" {% if form.gender == gender %}selected{% endif %}>{{ gender }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label for="birthdate">Birthdate</label>
+        <input id="birthdate" type="date" name="birthdate" required value="{{ form.birthdate }}">
+    </div>
+    <div>
+        <label for="contactNo">Contact number</label>
+        <input id="contactNo" name="contactNo" required maxlength="20" value="{{ form.contactNo }}">
+    </div>
+    <div>
+        <label for="deptID">Department</label>
+        <select id="deptID" name="deptID" required>
+            <option value="">Select department</option>
+            {% for d in departments %}
+            <option value="{{ d.deptID }}" {% if form.deptID == d.deptID %}selected{% endif %}>{{ d.deptID }} — {{ d.deptName }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label for="eventID">Event</label>
+        <select id="eventID" name="eventID" required>
+            <option value="">Select event</option>
+            {% for e in events %}
+            <option value="{{ e.eventID }}" {% if form.eventID|string == e.eventID|string %}selected{% endif %} {% if e.joined >= e.noOfParticipant and form.eventID|string != e.eventID|string %}disabled{% endif %}>
+                {{ e.eventName }} · {{ e.category }} ({{ e.joined }}/{{ e.noOfParticipant }})
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label for="coachID">Coach</label>
+        <select id="coachID" name="coachID" required>
+            <option value="">Select coach</option>
+            {% for c in coaches %}
+            <option value="{{ c.userName }}" data-dept="{{ c.deptID }}" {% if form.coachID == c.userName %}selected{% endif %}>{{ c.lName }}, {{ c.fName }} ({{ c.deptID }})</option>
+            {% endfor %}
+        </select>
+        <p class="field-help">Coaches from the selected department.</p>
+    </div>
+    <div>
+        <label for="deanID">Dean</label>
+        <select id="deanID" name="deanID" required>
+            <option value="">Select dean</option>
+            {% for d in deans %}
+            <option value="{{ d.userName }}" data-dept="{{ d.deptID }}" {% if form.deanID == d.userName %}selected{% endif %}>{{ d.lName }}, {{ d.fName }} ({{ d.deptID }})</option>
+            {% endfor %}
+        </select>
+        <p class="field-help">Dean of the selected department.</p>
+    </div>
+    <div class="wide">
+        <label for="address">Address</label>
+        <textarea id="address" name="address" required maxlength="200">{{ form.address }}</textarea>
+    </div>
+    <div class="actions">
+        <button type="submit">{% if editing %}Update profile{% else %}Save profile{% endif %}</button>
+    </div>
+</form>
+{% endif %}
+{% endblock %}
+{% block scripts %}
+{% if not missing %}
+<script>
+function filterByDepartment() {
+    var dept = document.getElementById("deptID").value;
+    ["coachID", "deanID"].forEach(function (id) {
+        var select = document.getElementById(id);
+        var selectedStillVisible = false;
+        Array.prototype.forEach.call(select.options, function (option) {
+            if (!option.value) {
+                option.hidden = false;
+                option.disabled = false;
+                return;
+            }
+            var show = !dept || option.getAttribute("data-dept") === dept;
+            option.hidden = !show;
+            option.disabled = !show;
+            if (show && option.value === select.value) selectedStillVisible = true;
+        });
+        if (!selectedStillVisible) select.value = "";
+    });
+}
+document.getElementById("deptID").addEventListener("change", filterByDepartment);
+filterByDepartment();
+</script>
+{% endif %}
+{% endblock %}

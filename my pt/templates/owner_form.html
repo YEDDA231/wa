@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+  <div class="col-lg-6 mx-auto">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="h4 mb-3">
+          {% if mode == "new" %}New Pet Owner{% else %}Edit Pet Owner{% endif %}
+        </h2>
+        <form method="post">
+          {% if mode == "new" %}
+          <div class="mb-3">
+            <label class="form-label required">Owner ID</label>
+            <input type="text" name="petOwnerID" class="form-control" value="{{ owner.petOwnerID or '' }}" required>
+          </div>
+          {% endif %}
+          <div class="mb-3">
+            <label class="form-label required">First Name</label>
+            <input type="text" name="petOwnerFName" class="form-control" value="{{ owner.petOwnerFName or '' }}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label required">Last Name</label>
+            <input type="text" name="petOwnerLName" class="form-control" value="{{ owner.petOwnerLName or '' }}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label required">Birth Date (YYYY-MM-DD)</label>
+            <input type="date" name="petOwnerBDate" class="form-control" value="{{ owner.petOwnerBDate or '' }}" max="{{ (caller_today if caller_today is defined else '') }}" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label required">Telephone Number</label>
+            <input type="tel" name="petOwnerTelNo" class="form-control" value="{{ owner.petOwnerTelNo or '' }}" required>
+          </div>
+          <div class="d-flex justify-content-between">
+            <a href="{{ url_for('owners_list') }}" class="btn btn-outline-secondary">Back</a>
+            <button class="btn btn-primary" type="submit">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

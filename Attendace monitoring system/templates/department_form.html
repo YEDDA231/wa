@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}{% if department %}Edit Department{% else %}Add Department{% endif %}{% endblock %}
+{% block content %}
+<h2>{% if department %}Edit Department{% else %}Add a Department{% endif %}</h2>
+<p class="page-links">
+    <a href="{{ url_for('departments') }}">Department Management</a>
+    <span>|</span>
+    <a href="{{ url_for('menu') }}">Back to Menu</a>
+</p>
+<form method="post" class="sheet-form">
+    <label for="depCode">Department Code</label>
+    {% if department %}
+    <input id="depCode" name="depCode" type="number" value="{{ department.depCode }}" readonly>
+    {% else %}
+    <input id="depCode" name="depCode" type="number" min="1" required autofocus value="{{ request.form.get('depCode', suggested) }}">
+    {% endif %}
+
+    <label for="depName">Department Name</label>
+    <input id="depName" name="depName" maxlength="60" required {% if department %}autofocus{% endif %} value="{{ request.form.get('depName', department.depName if department else '') }}">
+
+    <label for="depHead">Department Head</label>
+    <input id="depHead" name="depHead" maxlength="60" required value="{{ request.form.get('depHead', department.depHead if department else '') }}">
+
+    <label for="depTelNo">Telephone Number</label>
+    <input id="depTelNo" name="depTelNo" maxlength="20" required value="{{ request.form.get('depTelNo', department.depTelNo if department else '') }}">
+
+    <div class="form-actions">
+        <button type="submit">{% if department %}Save Changes{% else %}Save Department{% endif %}</button>
+        <a href="{{ url_for('departments') }}">Cancel</a>
+    </div>
+</form>
+{% endblock %}

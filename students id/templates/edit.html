@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Student</title>
+</head>
+<body>
+
+<h2>Edit Student</h2>
+
+<form method="POST">
+    Name: <input type="text" name="name" value="{{ student[2] }}"><br>
+    Course: <input type="text" name="course" value="{{ student[3] }}"><br>
+    Score: <input type="number" name="score" value="{{ student[4] }}"><br>
+    <button type="submit">Update</button>
+	Date: <input type="date" name="date_added"><br>
+</form>
+
+<a href="/">Back</a>
+
+</body>
+</html>

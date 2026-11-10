@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Record Attendance{% endblock %}
+{% block content %}
+<h2>Record Attendance</h2>
+<p class="page-links">
+    <a href="{{ url_for('attendance') }}">Attendance Recording</a>
+    <span>|</span>
+    <a href="{{ url_for('menu') }}">Back to Menu</a>
+</p>
+<form method="post" class="sheet-form">
+    {% set chosen = request.form.get('empID', '') %}
+    <label for="empID">Employee</label>
+    <select id="empID" name="empID" required autofocus>
+        <option value="" disabled {% if not chosen %}selected{% endif %}>Select an employee</option>
+        {% for emp in employees %}
+        <option value="{{ emp.empID }}" {% if chosen|string == emp.empID|string %}selected{% endif %}>
+            {{ emp.empID }} - {{ emp.empLName }}, {{ emp.empName }}
+        </option>
+        {% endfor %}
+    </select>
+
+    <label for="attDate">Date</label>
+    <input id="attDate" name="attDate" type="date" required value="{{ request.form.get('attDate', '') }}">
+
+    <label for="attTimeIn">Time In</label>
+    <input id="attTimeIn" name="attTimeIn" type="time" required value="{{ request.form.get('attTimeIn', '') }}">
+
+    <label for="attTimeOut">Time Out</label>
+    <input id="attTimeOut" name="attTimeOut" type="time" required value="{{ request.form.get('attTimeOut', '') }}">
+
+    <div class="form-actions">
+        <button type="submit">Record Attendance</button>
+        <a href="{{ url_for('attendance') }}">Cancel</a>
+    </div>
+</form>
+{% endblock %}

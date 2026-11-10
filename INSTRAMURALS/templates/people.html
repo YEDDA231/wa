@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} · UC Main Intramurals{% endblock %}
+{% block heading %}{{ title }}{% endblock %}
+{% block lede %}Records from the {{ table_name }} table. A row appears after that person saves a profile.{% endblock %}
+{% block content %}
+<section class="panel">
+    {% if people %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID number</th>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Mobile</th>
+                    <th>Department</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for person in people %}
+                <tr>
+                    <td>{{ person.userName }}</td>
+                    <td>{{ person.fName }}</td>
+                    <td>{{ person.lName }}</td>
+                    <td>{{ person.mobile }}</td>
+                    <td>{{ person.deptName }} <span class="muted">({{ person.deptID }})</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="empty">No records yet.</p>
+    {% endif %}
+</section>
+{% endblock %}
