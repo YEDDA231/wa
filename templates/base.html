@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="ie-edge">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+		<link rel="stylesheet" href="{{ url_for('static',filename='css/w3.css')}}"/>
+		<title>INVENTORY</title>
+	</head>
+	<body>
+		<div class="w3-bar w3-indigo w3-container">
+			<div class="w3-bar-item">
+				INVENTORY
+			</div>
+			<div class="w3-bar-item w3-right">
+				<!-- (-----------------) edit menu -->
+				{% if session.get('email') %}
+					<span class="w3-bar-item">{{ session.get('email') }}</span>
+					<a href="/main" class="w3-bar-item w3-button">ITEMS</a>
+					<a href="/categories" class="w3-bar-item w3-button">CATEGORIES</a>
+					<a href="/suppliers" class="w3-bar-item w3-button">SUPPLIERS</a>
+					<a href="/logs" class="w3-bar-item w3-button">STOCK LOG</a>
+					<a href="/logout" class="w3-bar-item w3-button">LOG-OUT</a>
+				{% endif %}
+				<!-- (-----------------) end -->
+				{% block menu %}
+				{% endblock %}
+			</div>
+		</div>
+		{% with messages=get_flashed_messages()%}
+			{% if messages %}
+				{% for message in messages %}
+					<div class="w3-bar w3-container w3-padding-16 w3-amber w3-center">
+						<b>{{ message }}</b>
+					</div>
+				{% endfor %}
+			{% endif %}
+			{% endwith %}
+		<div class="w3-container w3-padding-16">
+			{% block content %}
+			{% endblock %}
+			<center>
+				<hr/>
+				Copyright &copy; duranodennis 2026
+			</center>
+		</div>
+	</body>
+</html>

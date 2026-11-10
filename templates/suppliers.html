@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block content %}
+	<form method="get" action="/suppliers" class="w3-row-padding w3-margin-bottom">
+		<div class="w3-col m8">
+			<!-- (-----------------) edit search -->
+			<input class="w3-input w3-border" type="text" name="q" value="{{ q }}" placeholder="Search name, contact, email"/>
+			<!-- (-----------------) end -->
+		</div>
+		<div class="w3-col m4">
+			<button class="w3-button w3-blue" type="submit">SEARCH</button>
+			<a class="w3-button w3-gray" href="/suppliers">CLEAR</a>
+			<button class="w3-button w3-green" type="button" onclick="addsupplier()">+ ADD SUPPLIER</button>
+		</div>
+	</form>
+	<div class="w3-responsive">
+		<table class="w3-table-all w3-animate-top w3-card-4">
+			<!-- (-----------------) edit supplier -->
+			<tr>
+				<th>ID</th>
+				<th>NAME</th>
+				<th>CONTACT</th>
+				<th>EMAIL</th>
+				<th>CONTROL</th>
+			</tr>
+			{% for supplier in suppliers %}
+			<tr>
+				<td>{{ supplier['id'] }}</td>
+				<td>{{ supplier['name'] }}</td>
+				<td>{{ supplier['contact'] or '' }}</td>
+				<td>{{ supplier['email'] or '' }}</td>
+				<td>
+					<button class="w3-button w3-blue w3-tiny" type="button"
+						data-id="{{ supplier['id'] }}"
+						data-name="{{ supplier['name'] }}"
+						data-contact="{{ supplier['contact'] or '' }}"
+						data-email="{{ supplier['email'] or '' }}"
+						onclick="editsupplier(this)">EDIT</button>
+					<button class="w3-button w3-red w3-tiny" type="button" onclick="deletesupplier('{{ supplier['id'] }}')">DELETE</button>
+				</td>
+			</tr>
+			{% else %}
+			<tr>
+				<td colspan="5">No suppliers found</td>
+			</tr>
+			{% endfor %}
+			<!-- (-----------------) end -->
+		</table>
+	</div>
+	<div class="w3-modal" id="suppliermodal">
+		<div class="w3-modal-content w3-animate-top">
+			<div class="w3-container w3-blue">
+				<h4 id="modaltitle">ADD SUPPLIER</h4>
+				<span class="w3-btn w3-display-topright" onclick="modalcontrol('suppliermodal','none')">&times;</span>
+			</div>
+			<div class="w3-container">
+				<!-- (-----------------) edit supplier -->
+				<form action="/savesupplier" method="post" id="supplierform">
+					<input type="hidden" value="0" id="savetype" name="savetype"/>
+					<input type="hidden" value="" id="itemid" name="id"/>
+					<p>
+						<label><b>NAME</b></label>
+						<input type="text" name="name" id="name" class="w3-input w3-border"/>
+					</p>
+					<p>
+						<label><b>CONTACT</b></label>
+						<input type="text" name="contact" id="contact" class="w3-input w3-border"/>
+					</p>
+					<p>
+						<label><b>EMAIL</b></label>
+						<input type="email" name="email" id="email" class="w3-input w3-border"/>
+					</p>
+					<!-- (-----------------) end -->
+					<p class="w3-right">
+						<input type="submit" value="SAVE" class="w3-button w3-blue"/>
+						<input type="reset" value="CANCEL" class="w3-button w3-red" onclick="modalcontrol('suppliermodal','none')"/>
+					</p>
+				</form>
+			</div>
+		</div>
+	</div>
+	<script>
+		function modalcontrol(modalname,control){
+			document.getElementById(modalname).style.display=control;
+		}
+		function addsupplier(){
+			document.getElementById('supplierform').reset();
+			document.getElementById('savetype').value="0";
+			document.getElementById('itemid').value="";
+			document.getElementById('modaltitle').innerHTML="ADD SUPPLIER";
+			modalcontrol('suppliermodal','block');
+		}
+		function editsupplier(btn){
+			modalcontrol('suppliermodal','block');
+			document.getElementById('modaltitle').innerHTML="EDIT SUPPLIER";
+			document.getElementById('savetype').value="1";
+			document.getElementById('itemid').value=btn.dataset.id;
+			document.getElementById('name').value=btn.dataset.name;
+			document.getElementById('contact').value=btn.dataset.contact;
+			document.getElementById('email').value=btn.dataset.email;
+		}
+		function deletesupplier(id){
+			var ok = confirm("Delete this supplier?");
+			if (ok==true){
+				location.href='/deletesupplier?id='+id;
+			}
+		}
+	</script>
+{% endblock %}

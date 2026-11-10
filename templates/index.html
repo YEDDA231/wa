@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+	<form class="w3-card-4 w3-container w3-padding-8 w3-round-xlarge w3-animate-top" style="max-width:460px;margin:auto" method="post" action="/login">
+		<!-- (-----------------) edit login -->
+		<p>
+			<label><b>E-MAIL</b></label>
+			<input type="email" name="email" class="w3-input w3-border" required />
+		</p>
+		<p>
+			<label><b>PASSWORD</b></label>
+			<input type="password" name="password" class="w3-input w3-border" required />
+		</p>
+		<!-- (-----------------) end -->
+		<p class="w3-right">
+			<input type="submit" value="LOGIN" class="w3-button w3-blue"/>
+		</p>
+		<div class="w3-panel w3-pale-blue w3-leftbar w3-border-blue">
+			<b>LOGIN ACCOUNTS</b>
+			{% for account in accounts %}
+				<p>{{ account['email'] }} / {{ account['password'] }}</p>
+			{% endfor %}
+		</div>
+	</form>
+{% endblock %}

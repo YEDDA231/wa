@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+	<form method="get" action="/logs" class="w3-row-padding w3-margin-bottom">
+		<div class="w3-col m8">
+			<!-- (-----------------) edit search -->
+			<input class="w3-input w3-border" type="text" name="q" value="{{ q }}" placeholder="Search sku, item, action, note"/>
+			<!-- (-----------------) end -->
+		</div>
+		<div class="w3-col m4">
+			<button class="w3-button w3-blue" type="submit">SEARCH</button>
+			<a class="w3-button w3-gray" href="/logs">CLEAR</a>
+		</div>
+	</form>
+	<div class="w3-responsive">
+		<table class="w3-table-all w3-animate-top w3-card-4">
+			<!-- (-----------------) edit logs -->
+			<tr>
+				<th>ID</th>
+				<th>DATE</th>
+				<th>SKU</th>
+				<th>ITEM</th>
+				<th>CHANGE</th>
+				<th>ACTION</th>
+				<th>NOTE</th>
+			</tr>
+			{% for log in logs %}
+			<tr>
+				<td>{{ log['id'] }}</td>
+				<td>{{ log['created_at'] }}</td>
+				<td>{{ log['sku'] or '' }}</td>
+				<td>{{ log['product'] or '' }}</td>
+				<td class="{% if log['change_qty'] < 0 %}w3-text-red{% else %}w3-text-green{% endif %}"><b>{{ log['change_qty'] }}</b></td>
+				<td>{{ log['action'] }}</td>
+				<td>{{ log['note'] or '' }}</td>
+			</tr>
+			{% else %}
+			<tr>
+				<td colspan="7">No stock logs found</td>
+			</tr>
+			{% endfor %}
+			<!-- (-----------------) end -->
+		</table>
+	</div>
+{% endblock %}

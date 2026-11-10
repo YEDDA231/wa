@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% block content %}
+	<p>
+		<b>Total items: {{ total }}</b>
+		&nbsp;|&nbsp;
+		<b class="w3-text-red">Low stock (5 or less): {{ low }}</b>
+	</p>
+	<form method="get" action="/main" class="w3-row-padding w3-margin-bottom">
+		<div class="w3-col m8">
+			<!-- (-----------------) edit search -->
+			<input class="w3-input w3-border" type="text" name="q" value="{{ q }}" placeholder="Search sku, name, category, supplier, unit"/>
+			<!-- (-----------------) end -->
+		</div>
+		<div class="w3-col m4">
+			<button class="w3-button w3-blue" type="submit">SEARCH</button>
+			<a class="w3-button w3-gray" href="/main">CLEAR</a>
+			<button class="w3-button w3-green" type="button" onclick="addproduct()">+ ADD ITEM</button>
+		</div>
+	</form>
+	<div class="w3-responsive">
+		<table class="w3-table-all w3-animate-top w3-card-4">
+			<!-- (-----------------) edit items -->
+			<tr>
+				<th>ID</th>
+				<th>SKU</th>
+				<th>NAME</th>
+				<th>CATEGORY</th>
+				<th>SUPPLIER</th>
+				<th>PRICE</th>
+				<th>QTY</th>
+				<th>UNIT</th>
+				<th>CONTROL</th>
+			</tr>
+			{% for product in products %}
+			<tr>
+				<td>{{ product['id'] }}</td>
+				<td>{{ product['sku'] }}</td>
+				<td>{{ product['name'] }}</td>
+				<td>{{ product['category'] or '' }}</td>
+				<td>{{ product['supplier'] or '' }}</td>
+				<td>{{ "%.2f"|format(product['price']) }}</td>
+				<td {% if product['quantity'] <= 5 %}class="w3-text-red"{% endif %}><b>{{ product['quantity'] }}</b></td>
+				<td>{{ product['unit'] }}</td>
+				<td>
+					<button class="w3-button w3-blue w3-tiny" type="button"
+						data-id="{{ product['id'] }}"
+						data-sku="{{ product['sku'] }}"
+						data-name="{{ product['name'] }}"
+						data-category="{{ product['category_id'] or '' }}"
+						data-supplier="{{ product['supplier_id'] or '' }}"
+						data-price="{{ product['price'] }}"
+						data-quantity="{{ product['quantity'] }}"
+						data-unit="{{ product['unit'] or '' }}"
+						onclick="editproduct(this)">EDIT</button>
+					<button class="w3-button w3-red w3-tiny" type="button" onclick="deleteproduct('{{ product['id'] }}')">DELETE</button>
+				</td>
+			</tr>
+			{% else %}
+			<tr>
+				<td colspan="9">No items found</td>
+			</tr>
+			{% endfor %}
+			<!-- (-----------------) end -->
+		</table>
+	</div>
+	<div class="w3-modal" id="productmodal">
+		<div class="w3-modal-content w3-animate-top">
+			<div class="w3-container w3-blue">
+				<h4 id="modaltitle">ADD ITEM</h4>
+				<span class="w3-btn w3-display-topright" onclick="modalcontrol('productmodal','none')">&times;</span>
+			</div>
+			<div class="w3-container">
+				<!-- (-----------------) edit items -->
+				<form action="/saveproduct" method="post" id="productform">
+					<input type="hidden" value="0" id="savetype" name="savetype"/>
+					<input type="hidden" value="" id="itemid" name="id"/>
+					<p>
+						<label><b>SKU</b></label>
+						<input type="text" name="sku" id="sku" class="w3-input w3-border"/>
+					</p>
+					<p>
+						<label><b>NAME</b></label>
+						<input type="text" name="name" id="name" class="w3-input w3-border"/>
+					</p>
+					<p>
+						<label><b>CATEGORY</b></label>
+						<select name="category_id" id="category_id" class="w3-input w3-border">
+							<option value="">-- none --</option>
+							{% for category in categories %}
+							<option value="{{ category['id'] }}">{{ category['name'] }}</option>
+							{% endfor %}
+						</select>
+					</p>
+					<p>
+						<label><b>SUPPLIER</b></label>
+						<select name="supplier_id" id="supplier_id" class="w3-input w3-border">
+							<option value="">-- none --</option>
+							{% for supplier in suppliers %}
+							<option value="{{ supplier['id'] }}">{{ supplier['name'] }}</option>
+							{% endfor %}
+						</select>
+					</p>
+					<p>
+						<label><b>PRICE</b></label>
+						<input type="number" step="0.01" min="0" name="price" id="price" class="w3-input w3-border"/>
+					</p>
+					<p>
+						<label><b>QUANTITY</b></label>
+						<input type="number" step="1" min="0" name="quantity" id="quantity" class="w3-input w3-border"/>
+					</p>
+					<p>
+						<label><b>UNIT</b></label>
+						<input type="text" name="unit" id="unit" class="w3-input w3-border" placeholder="pcs"/>
+					</p>
+					<!-- (-----------------) end -->
+					<p class="w3-right">
+						<input type="submit" value="SAVE" class="w3-button w3-blue"/>
+						<input type="reset" value="CANCEL" class="w3-button w3-red" onclick="modalcontrol('productmodal','none')"/>
+					</p>
+				</form>
+			</div>
+		</div>
+	</div>
+	<script>
+		function modalcontrol(modalname,control){
+			document.getElementById(modalname).style.display=control;
+		}
+		function addproduct(){
+			document.getElementById('productform').reset();
+			document.getElementById('savetype').value="0";
+			document.getElementById('itemid').value="";
+			document.getElementById('modaltitle').innerHTML="ADD ITEM";
+			modalcontrol('productmodal','block');
+		}
+		function editproduct(btn){
+			modalcontrol('productmodal','block');
+			document.getElementById('modaltitle').innerHTML="EDIT ITEM";
+			document.getElementById('savetype').value="1";
+			document.getElementById('itemid').value=btn.dataset.id;
+			document.getElementById('sku').value=btn.dataset.sku;
+			document.getElementById('name').value=btn.dataset.name;
+			document.getElementById('category_id').value=btn.dataset.category;
+			document.getElementById('supplier_id').value=btn.dataset.supplier;
+			document.getElementById('price').value=btn.dataset.price;
+			document.getElementById('quantity').value=btn.dataset.quantity;
+			document.getElementById('unit').value=btn.dataset.unit;
+		}
+		function deleteproduct(id){
+			var ok = confirm("Delete this item?");
+			if (ok==true){
+				location.href='/deleteproduct?id='+id;
+			}
+		}
+	</script>
+{% endblock %}
